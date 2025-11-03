@@ -1,5 +1,6 @@
 {
-  "name": "fusion-starter",
+  "name": "resumematch-pro",
+  "description": "AI-powered resume tailoring Chrome extension and web app",
   "private": true,
   "type": "module",
   "pkg": {
@@ -15,17 +16,24 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
     "build:server": "vite build --config vite.config.server.ts",
+    "build:extension": "vite build --config vite.config.extension.ts",
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.11.1",
+    "@mongodb-js/realm-web": "^2.0.1",
+    "date-fns": "^4.1.0",
+    "docx": "^8.5.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "mammoth": "^1.6.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -61,6 +69,7 @@
     "@tanstack/react-query": "^5.84.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/mammoth": "^1.4.4",
     "@types/node": "^24.2.1",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
@@ -71,7 +80,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "cors": "^2.8.5",
-    "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.12",
     "globals": "^16.3.0",
