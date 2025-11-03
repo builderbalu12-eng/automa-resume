@@ -3,20 +3,13 @@ import { User, ResumeData, ApplicationRecord } from "@/types";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 export async function saveUser(userData: User): Promise<User> {
-  const realmApp = await initRealm();
-  if (!realmApp.currentUser) {
-    await loginAnonymously();
-  }
-
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/users`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      }
-    );
+    const response = await fetch(`${API_URL}/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) throw new Error("Failed to save user");
     return await response.json();
   } catch (error) {
     console.error("Error saving user:", error);
