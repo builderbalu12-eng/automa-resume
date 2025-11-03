@@ -6,6 +6,7 @@
 **Description**: AI-powered Chrome extension + web app that automatically tailors resumes for job applications, optimizes for ATS (Applicant Tracking System), and provides real-time match scores.
 
 **Core Technologies**:
+
 - Frontend: React 18 + React Router 6 + TypeScript + Vite
 - Styling: Tailwind CSS 3 + Radix UI
 - AI: Google Gemini API for resume analysis
@@ -71,8 +72,10 @@ resumematch-pro/
 ## 📄 Page-by-Page Functionality
 
 ### 1. **Dashboard (`/`)** - `client/pages/Dashboard.tsx`
+
 **Purpose**: Landing page and main hub  
 **Key Components**:
+
 - Hero section with gradient background
 - Feature cards (3-column grid)
 - Call-to-action buttons
@@ -80,6 +83,7 @@ resumematch-pro/
 - Recent applications list (if any)
 
 **Logic Flow**:
+
 ```typescript
 1. Load master resume from localStorage
 2. Load application history from API
@@ -89,16 +93,19 @@ resumematch-pro/
 ```
 
 **Data Loaded**:
+
 - `getMasterResume()` → ResumeData or null
 - `getUserId()` → string or null
 - `getApplicationHistory(userId)` → ApplicationRecord[]
 
 **Navigation**:
+
 - "Upload Your Resume" button → `/upload`
 - "View History" button → `/history` (only if resume exists)
 - "Tailor Your Resume" button → `/upload` (if resume exists)
 
 **Visual Features**:
+
 - Animated gradient background
 - Floating blob shapes (decorative)
 - Responsive grid layout
@@ -107,13 +114,16 @@ resumematch-pro/
 ---
 
 ### 2. **Upload Resume (`/upload`)** - `client/pages/UploadResume.tsx`
+
 **Purpose**: Upload master resume and tailor for jobs  
 **Key Components**:
+
 - `<ResumeUpload />` component
 - Resume summary display (after upload)
 - Success/error messages
 
 **Logic Flow**:
+
 ```typescript
 1. Show file upload component
 2. On file drop/select:
@@ -128,6 +138,7 @@ resumematch-pro/
 ```
 
 **Resume Parsing** (`resumeParser.ts`):
+
 ```typescript
 Extracts from DOCX:
 - Contact info (name, email, phone, location)
@@ -139,6 +150,7 @@ Extracts from DOCX:
 ```
 
 **Validation Rules**:
+
 ```typescript
 Required fields:
 - ✓ Name
@@ -150,28 +162,33 @@ Required fields:
 ```
 
 **Error Handling**:
+
 - Invalid file format → Show error message
 - Parsing failure → Suggest re-saving resume
 - Missing required fields → List specific errors
 
 **State Management**:
+
 ```typescript
-const [resume, setResume] = useState<ResumeData | null>(null)
-const [isLoading, setIsLoading] = useState(false)
-const [error, setError] = useState<string | null>(null)
+const [resume, setResume] = useState<ResumeData | null>(null);
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState<string | null>(null);
 ```
 
 ---
 
 ### 3. **History (`/history`)** - `client/pages/History.tsx`
+
 **Purpose**: Track all resume applications and outcomes  
 **Key Components**:
+
 - `<ApplicationList />` component
 - Status filter buttons
 - Export CSV button
 - Statistics cards
 
 **Logic Flow**:
+
 ```typescript
 1. Load applications from API: getApplicationHistory(userId)
 2. On mount, fetch all applications
@@ -183,6 +200,7 @@ const [error, setError] = useState<string | null>(null)
 ```
 
 **CSV Export**:
+
 ```
 Headers: Job Title, Company, Status, Match Score, Applied Date
 Format: Quoted CSV with commas
@@ -190,12 +208,14 @@ Filename: applications_YYYY-MM-DD.csv
 ```
 
 **Status Options**:
+
 - `applied` - Initial application
 - `interview` - Moved to interview stage
 - `offer` - Received offer
 - `rejected` - Rejected by company
 
 **Statistics Displayed**:
+
 ```typescript
 - Total Applications: length of array
 - Offers: filter(s => s.status === 'offer').length
@@ -204,6 +224,7 @@ Filename: applications_YYYY-MM-DD.csv
 ```
 
 **Application Card Display**:
+
 ```typescript
 Shows per application:
 - Job title + Company
@@ -219,15 +240,18 @@ Shows per application:
 ## 🎨 Component Deep Dive
 
 ### **ResumeUpload Component** - `client/components/ResumeUpload.tsx`
+
 **Props**:
+
 ```typescript
 interface ResumeUploadProps {
-  onUploadSuccess: (resume: ResumeData) => void
-  isLoading?: boolean
+  onUploadSuccess: (resume: ResumeData) => void;
+  isLoading?: boolean;
 }
 ```
 
 **Features**:
+
 - Drag-and-drop zone
 - File input fallback
 - Hover animations
@@ -235,6 +259,7 @@ interface ResumeUploadProps {
 - Error messages
 
 **Event Handlers**:
+
 - `handleDrag()` - Track mouse over drop zone
 - `handleDrop()` - Process dropped file
 - `handleChange()` - Process selected file
@@ -243,19 +268,21 @@ interface ResumeUploadProps {
 ---
 
 ### **ATSScore Component** - `client/components/ATSScore.tsx`
+
 **Props**:
+
 ```typescript
 interface ATSScoreProps {
-  score: ATSScore
-  isLoading?: boolean
+  score: ATSScore;
+  isLoading?: boolean;
 }
 ```
 
 **Displays**:
+
 1. **Circular progress indicator**
    - Percentage (0-100%)
    - Color coding: Green (80+), Yellow (60-79), Orange (<60)
-   
 2. **ATS Score breakdown**
    - Numeric score /100
    - Progress bar visualization
@@ -275,16 +302,19 @@ interface ATSScoreProps {
 ---
 
 ### **ApplicationList Component** - `client/components/ApplicationList.tsx`
+
 **Props**:
+
 ```typescript
 interface ApplicationListProps {
-  applications: ApplicationRecord[]
-  onStatusChange?: (appId: string, status: ApplicationRecord["status"]) => void
-  isLoading?: boolean
+  applications: ApplicationRecord[];
+  onStatusChange?: (appId: string, status: ApplicationRecord["status"]) => void;
+  isLoading?: boolean;
 }
 ```
 
 **Card Features**:
+
 - Job title + company
 - Status badge with icon
 - Match score display
@@ -300,7 +330,9 @@ Shows emoji and message when no applications
 ## 🔌 Services Layer
 
 ### **MongoDB Service** - `client/services/mongodb.ts`
+
 **Functions**:
+
 ```typescript
 // User operations
 saveUser(userData: User) → Promise<User>
@@ -314,12 +346,14 @@ updateApplicationStatus(appId: string, status: string) → Promise<ApplicationRe
 ```
 
 **Current Implementation**:
+
 - Uses backend REST API endpoints
 - API_URL: `http://localhost:8080/api` (from env or default)
 - All calls go to Express server
 - Falls back gracefully if API unavailable
 
 **Error Handling**:
+
 ```typescript
 try {
   const response = await fetch(...)
@@ -334,16 +368,19 @@ try {
 ---
 
 ### **Gemini Service** - `client/services/gemini.ts`
+
 **API Key**: `VITE_GOOGLE_GEMINI_API_KEY` from environment
 
 **Functions**:
 
 #### 1. **analyzeMasterResume(resume: ResumeData) → Promise<string>**
+
 - Creates summary of candidate profile
 - Used for comparison against jobs
 - Returns 2-3 sentence analysis
 
 #### 2. **extractJobRequirements(jobDescription: string) → Promise<JobDescription>**
+
 - Parses job posting text
 - Returns structured JSON:
   ```typescript
@@ -357,6 +394,7 @@ try {
   ```
 
 #### 3. **tailorResumeForJob(master: ResumeData, job: JobDescription) → Promise<ResumeData>**
+
 - Takes master resume + job
 - Returns new ResumeData with:
   - Tailored professional summary
@@ -365,8 +403,9 @@ try {
   - Same overall structure
 
 **Prompt Template**:
+
 ```
-"Tailor this resume for this job. 
+"Tailor this resume for this job.
 Highlight relevant skills matching the job.
 Use keywords from job description.
 Optimize for ATS.
@@ -374,7 +413,9 @@ Return JSON with tailoredSummary and tailoredExperience."
 ```
 
 #### 4. **calculateATSScore(resume: ResumeData, job: JobDescription) → Promise<ATSScore>**
+
 Returns:
+
 ```typescript
 {
   score: number (0-100),           // Overall ATS score
@@ -388,9 +429,11 @@ Returns:
 ---
 
 ### **Resume Parser Service** - `client/services/resumeParser.ts`
+
 **Main Function**: `parseDocxFile(file: File) → Promise<ResumeData>`
 
 **Parsing Strategy**:
+
 1. Convert DOCX to text using mammoth.js
 2. Split by lines and clean
 3. Extract sections by keyword matching:
@@ -400,15 +443,17 @@ Returns:
    - Education: regex for degrees + institutions
 
 **Key Regex Patterns**:
+
 ```typescript
-Email: /[\w\.-]+@[\w\.-]+\.\w+/
-Phone: /(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/
-URL: /(https?:\/\/[^\s]+|www\.[^\s]+)/i
-Experience: /([A-Z][a-z\s]+)\s+at\s+([A-Z][a-z\s&\-\.]+)(\d{4})?[-–](\d{4}|present)?/gi
-Education: /(Bachelor|Master|PhD).*?in\s+([A-Za-z\s]+).*?from\s+([A-Z].*?(?:University|College))/gi
+Email: /[\w\.-]+@[\w\.-]+\.\w+/;
+Phone: /(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
+URL: /(https?:\/\/[^\s]+|www\.[^\s]+)/i;
+Experience: /([A-Z][a-z\s]+)\s+at\s+([A-Z][a-z\s&\-\.]+)(\d{4})?[-–](\d{4}|present)?/gi;
+Education: /(Bachelor|Master|PhD).*?in\s+([A-Za-z\s]+).*?from\s+([A-Z].*?(?:University|College))/gi;
 ```
 
 **Validation**: `validateResume(resume: ResumeData)`
+
 ```typescript
 Returns:
 {
@@ -420,9 +465,11 @@ Returns:
 ---
 
 ### **Resume Generator Service** - `client/services/resumeGenerator.ts`
+
 **Main Function**: `generateResumeDocx(resume: ResumeData, company: string, jobTitle: string) → Promise<Blob>`
 
 **DOCX Structure**:
+
 ```
 1. Header (Name + Contact Info)
 2. Professional Summary (if exists)
@@ -438,12 +485,14 @@ Returns:
 ```
 
 **Formatting**:
+
 - Font: Calibri 11pt (body), 14pt bold (headings)
 - Section headers: 24pt bold with bottom border
 - Proper spacing between sections
 - Professional styling
 
 **Download Function**: `downloadResume(...)`
+
 ```typescript
 1. Generate DOCX blob
 2. Create object URL
@@ -459,22 +508,24 @@ Returns:
 ### **Job Extractor** - `client/utils/jobExtractor.ts`
 
 #### `extractJobDescriptionFromDOM() → JobDescription | null`
+
 **Strategy**: Multi-site DOM parsing
+
 ```typescript
 1. Try LinkedIn selectors:
    - Title: h2.show-more-less-html__title
    - Company: a[href*="company"]
    - Description: .show-more-less-html__markup
-   
+
 2. Try Indeed selectors:
    - Title: h1.jobsearch-JobInfoHeader-title
    - Company: a[data-testid="company-name"]
    - Description: #jobDescriptionText
-   
+
 3. Try Naukri selectors:
    - Title: .jd-header .naukri-text
    - Description: .job-desc
-   
+
 4. Try Glassdoor selectors:
    - Title: [data-test="jobTitle"]
    - Company: [data-test="companyName"]
@@ -482,6 +533,7 @@ Returns:
 ```
 
 #### `extractRequirements(text: string) → string[]`
+
 ```typescript
 1. Find "requirements/qualifications" section
 2. Extract bullet points (•, -, *)
@@ -490,6 +542,7 @@ Returns:
 ```
 
 #### `extractSkills(text: string) → string[]`
+
 ```typescript
 1. Match against hardcoded skill list (100+ common tech skills)
 2. Extract years of experience
@@ -497,6 +550,7 @@ Returns:
 ```
 
 #### `createJobExtractionButton() → HTMLElement`
+
 ```typescript
 Creates styled button:
 - Position: fixed bottom-right
@@ -512,6 +566,7 @@ Creates styled button:
 #### `analyzeATSCompatibility(resume: ResumeData, job: JobDescription) → ATSScore`
 
 **Scoring Algorithm**:
+
 ```
 Contact Info: 10 points (3+3+4)
   - Email: 3
@@ -539,7 +594,9 @@ TOTAL: 100 points
 ```
 
 #### `generateImprovements(resume, job, missing) → string[]`
+
 Suggests:
+
 - Add professional summary if missing
 - Add more skills (aim for 10+)
 - Add experience if none
@@ -549,6 +606,7 @@ Suggests:
 - Quantify achievements with metrics
 
 #### Common Skills List (100+ tech skills):
+
 ```typescript
 Languages: JavaScript, Python, Java, C++, Go, Rust, etc.
 Frameworks: React, Vue, Angular, Node, Express, etc.
@@ -560,15 +618,18 @@ Methodologies: Agile, Scrum, CI/CD, DevOps, etc.
 ---
 
 ### **Storage Utility** - `client/utils/storage.ts`
+
 **Storage Keys**:
+
 ```typescript
-USER_ID: "resumematch_user_id"
-MASTER_RESUME: "resumematch_master_resume"
-AUTH_TOKEN: "resumematch_auth_token"
-GEMINI_API_KEY: "resumematch_gemini_key"
+USER_ID: "resumematch_user_id";
+MASTER_RESUME: "resumematch_master_resume";
+AUTH_TOKEN: "resumematch_auth_token";
+GEMINI_API_KEY: "resumematch_gemini_key";
 ```
 
 **Functions**:
+
 ```typescript
 // Generic
 saveToStorage(key, value) → Promise<void>
@@ -586,6 +647,7 @@ clearAllStorage() → Promise<void>
 ```
 
 **Dual Storage**:
+
 - Chrome Extension: Uses `chrome.storage.sync` (synced across devices)
 - Web App: Falls back to `localStorage`
 
@@ -594,6 +656,7 @@ clearAllStorage() → Promise<void>
 ## 📊 Data Types
 
 ### **ResumeData**
+
 ```typescript
 {
   contact: {
@@ -636,6 +699,7 @@ clearAllStorage() → Promise<void>
 ```
 
 ### **ApplicationRecord**
+
 ```typescript
 {
   _id?: string
@@ -656,6 +720,7 @@ clearAllStorage() → Promise<void>
 ```
 
 ### **ATSScore**
+
 ```typescript
 {
   score: number (0-100)
@@ -671,6 +736,7 @@ clearAllStorage() → Promise<void>
 ## 🔄 Data Flow
 
 ### **Resume Upload Flow**
+
 ```
 User uploads DOCX
   ↓
@@ -691,6 +757,7 @@ Show success screen
 ```
 
 ### **Resume Tailoring Flow**
+
 ```
 User inputs job description
   ↓
@@ -708,6 +775,7 @@ Display results:
 ```
 
 ### **Application Saving Flow**
+
 ```
 User clicks "Save Application"
   ↓
@@ -729,12 +797,14 @@ Show success notification
 ### **Base URL**: `http://localhost:8080/api`
 
 ### **Health Check**
+
 ```
 GET /api/health
 Response: { status: "ok" }
 ```
 
 ### **User Management**
+
 ```
 POST /api/users
 Body: User
@@ -749,6 +819,7 @@ Response: ResumeData
 ```
 
 ### **Applications**
+
 ```
 GET /api/applications?userId=123
 Response: ApplicationRecord[]
@@ -767,6 +838,7 @@ Response: ApplicationRecord
 ## 🎨 Styling & Theme
 
 ### **Color Scheme**
+
 ```css
 Primary: hsl(262, 80%, 50%)  /* Purple */
 Secondary: hsl(218, 92%, 50%)  /* Blue */
@@ -779,6 +851,7 @@ Border: light gray
 ```
 
 ### **Typography**
+
 ```css
 Headings: Poppins (600, 700, 800 weight)
 Body: Inter (400, 500, 600, 700 weight)
@@ -786,6 +859,7 @@ Mono: Fira Code (for code snippets)
 ```
 
 ### **Spacing**
+
 - Default padding: 1rem (16px)
 - Border radius: 0.75rem (12px)
 - Gap/margin increment: 0.5rem
@@ -795,6 +869,7 @@ Mono: Fira Code (for code snippets)
 ## ⚙️ Configuration
 
 ### **Environment Variables** (`.env.local`)
+
 ```
 # Required for AI features
 VITE_GOOGLE_GEMINI_API_KEY=your_api_key
@@ -807,6 +882,7 @@ VITE_API_URL=http://localhost:8080/api
 ```
 
 ### **Build Configuration** (`vite.config.ts`)
+
 ```typescript
 - Entry: client/main.tsx
 - Output: dist/spa/
@@ -820,20 +896,22 @@ VITE_API_URL=http://localhost:8080/api
 ## 🚀 Error Handling Strategy
 
 ### **API Fetch Errors**
+
 ```typescript
 try {
-  const response = await fetch(url)
-  if (!response.ok) throw new Error("API error")
-  return await response.json()
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("API error");
+  return await response.json();
 } catch (error) {
-  console.error("Error:", error)
+  console.error("Error:", error);
   // Show user-friendly message
   // Fallback to local storage if available
-  throw error
+  throw error;
 }
 ```
 
 ### **Gemini API Errors**
+
 ```typescript
 - No API key: Show setup instruction
 - Rate limit: Queue request or show error
@@ -841,6 +919,7 @@ try {
 ```
 
 ### **Resume Parsing Errors**
+
 ```typescript
 - Invalid file: "Please upload a .docx file"
 - Corrupted: "Resume parsing failed"
@@ -879,22 +958,26 @@ try {
 ## 🔧 Common Tasks & Code Locations
 
 ### **To add a new page**:
+
 1. Create `client/pages/MyPage.tsx`
 2. Add route to `client/App.tsx`
 3. Create navigation link
 
 ### **To call an API**:
+
 1. Create function in `client/services/mongodb.ts`
 2. Use from component via `useState`
 3. Handle loading/error states
 
 ### **To add a new AI feature**:
+
 1. Create function in `client/services/gemini.ts`
 2. Add prompt template
 3. Parse response JSON
 4. Return typed result
 
 ### **To style a component**:
+
 1. Use Tailwind classes
 2. Use CSS variables for colors
 3. Extend in `tailwind.config.ts` if needed
@@ -904,16 +987,19 @@ try {
 ## 🐛 Known Issues & Debugging
 
 ### **"Failed to fetch" Error**
+
 - Cause: Backend API not running or unreachable
 - Solution: Start backend server or disable API calls
 - Fallback: App uses localStorage if API fails
 
 ### **Resume parsing doesn't extract content**
+
 - Cause: DOCX formatting is unusual
 - Solution: Regenerate resume in Word/LibreOffice
 - Debug: Check mammoth.js output
 
 ### **Gemini API errors**
+
 - Cause: Invalid API key, rate limit, network
 - Solution: Check .env.local, verify API key active
 - Fallback: Basic extraction without AI
@@ -930,6 +1016,7 @@ try {
 ---
 
 This documentation should give Claude or any AI assistant complete understanding of:
+
 - ✅ What each page does
 - ✅ How components work together
 - ✅ Data flow and state management
@@ -938,4 +1025,3 @@ This documentation should give Claude or any AI assistant complete understanding
 - ✅ Error handling
 - ✅ File organization
 - ✅ Configuration needs
-

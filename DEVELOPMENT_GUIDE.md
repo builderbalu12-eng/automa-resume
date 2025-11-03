@@ -28,11 +28,13 @@ pnpm build
 ## 🔴 Current Known Issues & Fixes
 
 ### Issue: "TypeError: Failed to fetch" in UploadResume
+
 **Location**: `client/pages/UploadResume.tsx:45:23`  
 **Cause**: Backend API endpoint not running or unreachable  
-**Error Path**: 
+**Error Path**:
+
 ```
-UploadResume.handleUploadSuccess() 
+UploadResume.handleUploadSuccess()
   → saveResume() in mongodb.ts
   → fetch(/api/users/:id/resume)
   → FAILS (no server)
@@ -41,23 +43,24 @@ UploadResume.handleUploadSuccess()
 **Quick Fixes** (pick one):
 
 #### Option 1: Make API calls optional (Recommended)
+
 ```typescript
 // In client/pages/UploadResume.tsx
 const handleUploadSuccess = async (uploadedResume: ResumeData) => {
   setIsLoading(true);
-  
+
   try {
     const userId = `user_${Date.now()}`;
     await setUserId(userId);
     await setMasterResume(uploadedResume);
-    
+
     // Try to save to API, but don't fail if it doesn't work
     try {
       await saveResume(userId, uploadedResume);
     } catch (apiError) {
       console.warn("API unavailable, using local storage", apiError);
     }
-    
+
     setResume(uploadedResume);
   } catch (err) {
     setError("Failed to save resume. Please try again.");
@@ -69,16 +72,21 @@ const handleUploadSuccess = async (uploadedResume: ResumeData) => {
 ```
 
 #### Option 2: Disable API calls completely
+
 ```typescript
 // In client/services/mongodb.ts
 // Comment out or remove all fetch calls
-export async function saveResume(userId: string, resume: ResumeData): Promise<ResumeData> {
+export async function saveResume(
+  userId: string,
+  resume: ResumeData,
+): Promise<ResumeData> {
   // Just return the resume, don't call API
   return resume;
 }
 ```
 
 #### Option 3: Start the backend server
+
 ```bash
 # Build server
 cd /root/app/code
@@ -95,6 +103,7 @@ pnpm start
 ## 🔧 Component Architecture Issues
 
 ### Component Communication Flow
+
 ```
 App.tsx (router)
 ├── Dashboard.tsx
@@ -108,6 +117,7 @@ App.tsx (router)
 ```
 
 ### State Management Issues
+
 - No Redux/Context - Using local storage + API
 - Each page loads data independently
 - No shared state between pages
@@ -118,6 +128,7 @@ App.tsx (router)
 ## 📝 Common Modifications
 
 ### Change API Base URL
+
 ```typescript
 // client/services/mongodb.ts
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
@@ -125,6 +136,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 ```
 
 ### Modify ATS Scoring Weights
+
 ```typescript
 // client/utils/atsOptimizer.ts
 // In calculateATSScore():
@@ -137,6 +149,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 ```
 
 ### Add New Supported Job Sites
+
 ```typescript
 // client/utils/jobExtractor.ts
 // In extractJobDescriptionFromDOM():
@@ -152,6 +165,7 @@ if (ziprecruiterTitle) {
 ```
 
 ### Customize Resume Template
+
 ```typescript
 // client/services/resumeGenerator.ts
 // In generateResumeDocx():
@@ -160,18 +174,19 @@ if (ziprecruiterTitle) {
 new Paragraph({
   text: resume.contact.name,
   bold: true,
-  size: 28,  // Change font size
-  spacing: { after: 200 }  // Change spacing
-})
+  size: 28, // Change font size
+  spacing: { after: 200 }, // Change spacing
+});
 ```
 
 ### Update Theme Colors
+
 ```css
 /* client/global.css */
 :root {
-  --primary: 262 80% 50%;      /* Change this */
-  --secondary: 218 92% 50%;    /* Change this */
-  --accent: 16 100% 60%;       /* Change this */
+  --primary: 262 80% 50%; /* Change this */
+  --secondary: 218 92% 50%; /* Change this */
+  --accent: 16 100% 60%; /* Change this */
 }
 ```
 
@@ -180,13 +195,17 @@ new Paragraph({
 ## 🐛 Debugging Techniques
 
 ### Enable Console Logging
+
 ```typescript
 // Add to any function to trace execution
 console.log("Starting function X", { input1, input2 });
 
 // In services/mongodb.ts
 export async function saveResume(userId: string, resume: ResumeData) {
-  console.log("saveResume called with:", { userId, resumeLength: JSON.stringify(resume).length });
+  console.log("saveResume called with:", {
+    userId,
+    resumeLength: JSON.stringify(resume).length,
+  });
   try {
     const response = await fetch(`${API_URL}/users/${userId}/resume`, {
       method: "POST",
@@ -206,22 +225,24 @@ export async function saveResume(userId: string, resume: ResumeData) {
 ```
 
 ### Check Browser Storage
+
 ```javascript
 // In browser console
 // View localStorage
-localStorage.getItem("resumematch_user_id")
-localStorage.getItem("resumematch_master_resume")
+localStorage.getItem("resumematch_user_id");
+localStorage.getItem("resumematch_master_resume");
 
 // View all stored data
-Object.keys(localStorage).forEach(key => {
+Object.keys(localStorage).forEach((key) => {
   console.log(key, localStorage.getItem(key));
 });
 
 // Clear storage
-localStorage.clear()
+localStorage.clear();
 ```
 
 ### Network Debugging
+
 ```javascript
 // In browser DevTools:
 1. Open Network tab
@@ -232,6 +253,7 @@ localStorage.clear()
 ```
 
 ### React Component Debugging
+
 ```typescript
 // Add useEffect logging
 useEffect(() => {
@@ -250,6 +272,7 @@ useEffect(() => {
 ## 🔌 Integration Points
 
 ### Google Gemini API
+
 ```typescript
 // Required: VITE_GOOGLE_GEMINI_API_KEY in .env.local
 // Used in: client/services/gemini.ts
@@ -266,6 +289,7 @@ useEffect(() => {
 ```
 
 ### Resume Parsing Library
+
 ```typescript
 // Library: mammoth.js
 // Used in: client/services/resumeParser.ts
@@ -278,6 +302,7 @@ useEffect(() => {
 ```
 
 ### Document Generation Library
+
 ```typescript
 // Library: docx.js
 // Used in: client/services/resumeGenerator.ts
@@ -294,15 +319,16 @@ useEffect(() => {
 ## 📊 State Management Pattern
 
 ### Current Pattern (localStorage + API)
+
 ```typescript
 // 1. Load from localStorage
-const resume = await getMasterResume();  // From Chrome/localStorage
+const resume = await getMasterResume(); // From Chrome/localStorage
 
 // 2. Optionally sync with API
 try {
-  const fromApi = await getUserResume(userId);  // From backend
+  const fromApi = await getUserResume(userId); // From backend
   if (fromApi) {
-    await setMasterResume(fromApi);  // Update local
+    await setMasterResume(fromApi); // Update local
   }
 } catch (e) {
   // Use local copy if API fails
@@ -313,6 +339,7 @@ return resume;
 ```
 
 ### If You Want to Migrate to Context API
+
 ```typescript
 // Create client/context/ResumeContext.tsx
 import React, { createContext, useContext, useState } from "react";
@@ -325,7 +352,7 @@ const ResumeContext = createContext<{
 
 export function ResumeProvider({ children }: { children: React.ReactNode }) {
   const [resume, setResume] = useState<ResumeData | null>(null);
-  
+
   return (
     <ResumeContext.Provider value={{ resume, setResume }}>
       {children}
@@ -362,6 +389,7 @@ function MyComponent() {
 ## 🎯 Performance Optimization Tips
 
 ### Lazy Load Heavy Components
+
 ```typescript
 import { lazy, Suspense } from "react";
 
@@ -374,6 +402,7 @@ const UploadResume = lazy(() => import("./pages/UploadResume"));
 ```
 
 ### Memoize Components
+
 ```typescript
 import { memo } from "react";
 
@@ -389,12 +418,13 @@ export const ApplicationList = memo(({ applications }: Props) => {
 ```
 
 ### Optimize API Calls
+
 ```typescript
 // Don't call API on every render
 // Use useEffect with dependency array
 useEffect(() => {
-  loadApplications();  // Called once on mount
-}, []);  // Empty dependency = only on mount
+  loadApplications(); // Called once on mount
+}, []); // Empty dependency = only on mount
 
 // Cache API responses
 const [cache, setCache] = useState<Map<string, any>>(new Map());
@@ -418,6 +448,7 @@ const [cache, setCache] = useState<Map<string, any>>(new Map());
 ## 📋 Testing Checklist
 
 ### Manual Testing Steps
+
 - [ ] Upload resume with various formats
 - [ ] Extract job descriptions from major job sites
 - [ ] Tailor resume for sample job
@@ -430,6 +461,7 @@ const [cache, setCache] = useState<Map<string, any>>(new Map());
 - [ ] Test error scenarios
 
 ### Browser Compatibility
+
 - [ ] Chrome 90+
 - [ ] Firefox 88+
 - [ ] Safari 14+
@@ -448,10 +480,11 @@ When working with Claude on this project:
 5. **Request minimal changes**: "Add error handling to saveResume()" not "Rewrite the entire service"
 
 ### Example Prompt for Claude:
+
 ```
-"In the file client/pages/UploadResume.tsx, the handleUploadSuccess function 
-is calling saveResume() which makes an API call that fails with 'Failed to fetch'. 
-The user has no backend server running. 
+"In the file client/pages/UploadResume.tsx, the handleUploadSuccess function
+is calling saveResume() which makes an API call that fails with 'Failed to fetch'.
+The user has no backend server running.
 
 Can you modify the code to gracefully handle this error by:
 1. Logging the error
@@ -486,6 +519,7 @@ Before deploying to production:
 ## 📞 When to Ask for Help
 
 Escalate to human developer if:
+
 - Need to set up production database
 - Need to deploy to new infrastructure
 - Need to configure CI/CD pipeline
@@ -494,4 +528,3 @@ Escalate to human developer if:
 - Need to integrate with third-party service
 
 ---
-
