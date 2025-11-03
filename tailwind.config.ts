@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./client/**/*.{ts,tsx}"],
+  content: ["./client/**/*.{ts,tsx}", "./index.html"],
   prefix: "",
   theme: {
     container: {
@@ -11,6 +11,11 @@ export default {
       screens: {
         "2xl": "1400px",
       },
+    },
+    fontFamily: {
+      sans: ["Inter", "sans-serif"],
+      mono: ["Fira Code", "monospace"],
+      heading: ["Poppins", "sans-serif"],
     },
     extend: {
       colors: {
@@ -80,10 +85,47 @@ export default {
             height: "0",
           },
         },
+        "fade-in": {
+          from: {
+            opacity: "0",
+          },
+          to: {
+            opacity: "1",
+          },
+        },
+        "slide-up": {
+          from: {
+            transform: "translateY(20px)",
+            opacity: "0",
+          },
+          to: {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
+        },
+        pulse: {
+          "0%, 100%": {
+            opacity: "1",
+          },
+          "50%": {
+            opacity: "0.5",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.5s ease-out",
+        "slide-up": "slide-up 0.5s ease-out",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-warm": "var(--gradient-warm)",
+      },
+      boxShadow: {
+        glow: "0 10px 30px rgba(102, 51, 153, 0.2)",
+        "glow-lg": "0 20px 50px rgba(102, 51, 153, 0.15)",
       },
     },
   },
