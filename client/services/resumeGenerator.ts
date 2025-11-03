@@ -1,10 +1,22 @@
-import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, BorderStyle, UnderlineType, PageBreak, WidthType } from "docx";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  Table,
+  TableRow,
+  TableCell,
+  BorderStyle,
+  UnderlineType,
+  PageBreak,
+  WidthType,
+} from "docx";
 import { ResumeData } from "@/types";
 
 export async function generateResumeDocx(
   resume: ResumeData,
   company: string,
-  jobTitle: string
+  jobTitle: string,
 ): Promise<Blob> {
   const { contact, summary, skills, experience, education, projects } = resume;
 
@@ -51,7 +63,7 @@ export async function generateResumeDocx(
         text: summary,
         size: 22,
         spacing: { after: 400 },
-      })
+      }),
     );
   }
 
@@ -76,7 +88,7 @@ export async function generateResumeDocx(
         text: skills.join(" • "),
         size: 22,
         spacing: { after: 400 },
-      })
+      }),
     );
   }
 
@@ -96,10 +108,10 @@ export async function generateResumeDocx(
           },
         },
         spacing: { after: 200 },
-      })
+      }),
     );
 
-    experience.forEach(exp => {
+    experience.forEach((exp) => {
       const dateRange =
         exp.endDate && !exp.isCurrentlyWorking
           ? `${exp.startDate} – ${exp.endDate}`
@@ -117,17 +129,17 @@ export async function generateResumeDocx(
           italics: true,
           size: 20,
           spacing: { after: 200 },
-        })
+        }),
       );
 
-      exp.description.forEach(desc => {
+      exp.description.forEach((desc) => {
         sections.push(
           new Paragraph({
             text: desc,
             size: 22,
             spacing: { after: 100 },
             indent: { left: 720 },
-          })
+          }),
         );
       });
 
@@ -135,7 +147,7 @@ export async function generateResumeDocx(
         new Paragraph({
           text: "",
           spacing: { after: 200 },
-        })
+        }),
       );
     });
   }
@@ -156,10 +168,10 @@ export async function generateResumeDocx(
           },
         },
         spacing: { after: 200 },
-      })
+      }),
     );
 
-    education.forEach(edu => {
+    education.forEach((edu) => {
       sections.push(
         new Paragraph({
           text: `${edu.degree} in ${edu.field}`,
@@ -172,7 +184,7 @@ export async function generateResumeDocx(
           italics: true,
           size: 20,
           spacing: { after: 400 },
-        })
+        }),
       );
     });
   }
@@ -193,10 +205,10 @@ export async function generateResumeDocx(
           },
         },
         spacing: { after: 200 },
-      })
+      }),
     );
 
-    projects.forEach(project => {
+    projects.forEach((project) => {
       sections.push(
         new Paragraph({
           text: project.title,
@@ -208,7 +220,7 @@ export async function generateResumeDocx(
           text: project.description,
           size: 22,
           spacing: { after: 200 },
-        })
+        }),
       );
     });
   }
@@ -229,7 +241,7 @@ export async function generateResumeDocx(
 export async function downloadResume(
   resume: ResumeData,
   company: string,
-  jobTitle: string
+  jobTitle: string,
 ): Promise<void> {
   const blob = await generateResumeDocx(resume, company, jobTitle);
   const url = URL.createObjectURL(blob);

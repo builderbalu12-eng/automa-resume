@@ -17,7 +17,9 @@ export async function saveUser(userData: User): Promise<User> {
   }
 }
 
-export async function getUserResume(userId: string): Promise<ResumeData | null> {
+export async function getUserResume(
+  userId: string,
+): Promise<ResumeData | null> {
   try {
     const response = await fetch(`${API_URL}/users/${userId}/resume`);
     if (!response.ok) return null;
@@ -30,7 +32,7 @@ export async function getUserResume(userId: string): Promise<ResumeData | null> 
 
 export async function saveResume(
   userId: string,
-  resume: ResumeData
+  resume: ResumeData,
 ): Promise<ResumeData> {
   try {
     const response = await fetch(`${API_URL}/users/${userId}/resume`, {
@@ -47,7 +49,7 @@ export async function saveResume(
 }
 
 export async function saveApplication(
-  application: ApplicationRecord
+  application: ApplicationRecord,
 ): Promise<ApplicationRecord> {
   try {
     const response = await fetch(`${API_URL}/applications`, {
@@ -64,7 +66,7 @@ export async function saveApplication(
 }
 
 export async function getApplicationHistory(
-  userId: string
+  userId: string,
 ): Promise<ApplicationRecord[]> {
   try {
     const response = await fetch(`${API_URL}/applications?userId=${userId}`);
@@ -78,7 +80,7 @@ export async function getApplicationHistory(
 
 export async function updateApplicationStatus(
   applicationId: string,
-  status: ApplicationRecord["status"]
+  status: ApplicationRecord["status"],
 ): Promise<ApplicationRecord> {
   try {
     const response = await fetch(`${API_URL}/applications/${applicationId}`, {

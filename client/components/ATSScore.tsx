@@ -36,7 +36,10 @@ export const ATSScoreDisplay: React.FC<ATSScoreProps> = ({
       {/* Score Circle */}
       <div className="flex items-center justify-center">
         <div className="relative h-40 w-40">
-          <svg className="h-full w-full transform -rotate-90" viewBox="0 0 160 160">
+          <svg
+            className="h-full w-full transform -rotate-90"
+            viewBox="0 0 160 160"
+          >
             <circle
               cx="80"
               cy="80"
@@ -55,12 +58,14 @@ export const ATSScoreDisplay: React.FC<ATSScoreProps> = ({
               strokeWidth="8"
               strokeDasharray={`${(score.matchPercentage / 100) * 440} 440`}
               className={`transition-all duration-500 ${getScoreColor(
-                score.matchPercentage
+                score.matchPercentage,
               )}`}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className={`text-4xl font-bold ${getScoreColor(score.matchPercentage)}`}>
+            <div
+              className={`text-4xl font-bold ${getScoreColor(score.matchPercentage)}`}
+            >
               {score.matchPercentage}%
             </div>
             <div className="text-sm text-muted-foreground">ATS Match</div>
@@ -70,16 +75,20 @@ export const ATSScoreDisplay: React.FC<ATSScoreProps> = ({
 
       {/* Score Breakdown */}
       <div className="space-y-3">
-        <div className={`rounded-lg p-4 ${getScoreBgColor(score.matchPercentage)}`}>
-          <p className="text-sm font-medium text-foreground mb-2">ATS Score: {score.score}/100</p>
+        <div
+          className={`rounded-lg p-4 ${getScoreBgColor(score.matchPercentage)}`}
+        >
+          <p className="text-sm font-medium text-foreground mb-2">
+            ATS Score: {score.score}/100
+          </p>
           <div className="w-full bg-black/10 rounded-full h-2 overflow-hidden">
             <div
               className={`h-full ${
                 score.score >= 80
                   ? "bg-green-600"
                   : score.score >= 60
-                  ? "bg-yellow-600"
-                  : "bg-orange-600"
+                    ? "bg-yellow-600"
+                    : "bg-orange-600"
               }`}
               style={{ width: `${score.score}%` }}
             />
@@ -146,7 +155,10 @@ export const ATSScoreDisplay: React.FC<ATSScoreProps> = ({
           </div>
           <ul className="space-y-2">
             {score.improvements.slice(0, 5).map((improvement, idx) => (
-              <li key={idx} className="flex gap-2 text-sm text-muted-foreground">
+              <li
+                key={idx}
+                className="flex gap-2 text-sm text-muted-foreground"
+              >
                 <span className="text-primary font-bold">•</span>
                 <span>{improvement}</span>
               </li>

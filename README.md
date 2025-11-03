@@ -36,6 +36,7 @@ ResumeMatch Pro is a Chrome extension and web application that automatically tai
 ### Setup Steps
 
 1. **Clone and Install**
+
    ```bash
    git clone <repository-url>
    cd resumematch-pro
@@ -43,11 +44,13 @@ ResumeMatch Pro is a Chrome extension and web application that automatically tai
    ```
 
 2. **Configure Environment Variables**
+
    ```bash
    cp .env.example .env.local
    ```
 
    Edit `.env.local` with your credentials:
+
    ```env
    # Google Gemini API (get from https://makersuite.google.com/app/apikey)
    VITE_GOOGLE_GEMINI_API_KEY=your_gemini_api_key
@@ -60,12 +63,15 @@ ResumeMatch Pro is a Chrome extension and web application that automatically tai
    ```
 
 3. **Start Development Server**
+
    ```bash
    pnpm dev
    ```
+
    Open `http://localhost:8080` in your browser
 
 4. **Build for Production**
+
    ```bash
    pnpm build
    ```
@@ -166,12 +172,14 @@ resumematch-pro/
 ### Google Gemini API
 
 Used for:
+
 - Extracting job requirements from job descriptions
 - Tailoring resume content for specific jobs
 - Calculating ATS scores
 - Generating improvement suggestions
 
 **Setup:**
+
 1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Create a new API key
 3. Add to `.env.local` as `VITE_GOOGLE_GEMINI_API_KEY`
@@ -181,11 +189,13 @@ Used for:
 ### MongoDB Atlas
 
 Used for:
+
 - Storing user master resumes
 - Tracking application history
 - Storing tailored resumes
 
 **Setup:**
+
 1. Create [MongoDB Atlas account](https://www.mongodb.com/cloud/atlas)
 2. Create a free cluster
 3. Set up Realm Web SDK
@@ -247,6 +257,7 @@ pnpm format.fix
 ### Job Description Extraction
 
 Supports multiple job sites:
+
 - LinkedIn
 - Indeed
 - Naukri
@@ -276,12 +287,14 @@ Uses DOM parsing with fallback to Gemini API for complex layouts.
 ### Web App
 
 **Netlify:**
+
 ```bash
 pnpm build
 # Upload dist/spa to Netlify
 ```
 
 **Vercel:**
+
 ```bash
 pnpm build
 # Deploy with Vercel CLI
@@ -296,21 +309,25 @@ pnpm build
 ## 🐛 Troubleshooting
 
 ### "API key not configured"
+
 - Check `.env.local` has `VITE_GOOGLE_GEMINI_API_KEY`
 - Ensure key is valid and not expired
 - Check rate limits haven't been exceeded
 
 ### "MongoDB connection failed"
+
 - Verify `VITE_MONGODB_REALM_APP_ID` is correct
 - Check MongoDB Atlas network access settings
 - Ensure app is deployed on allowed domain
 
 ### Extension not injecting button
+
 - Check manifest permissions in Chrome DevTools
 - Verify content script matches job site domains
 - Try refreshing the job posting page
 
 ### Resume parsing errors
+
 - Ensure DOCX file is valid and not corrupted
 - Try re-saving with Word or LibreOffice
 - Check for special characters or unusual formatting
@@ -326,6 +343,7 @@ pnpm build
 ## 🤝 Contributing
 
 Contributions welcome! Please:
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -338,6 +356,7 @@ MIT License - feel free to use this project for personal or commercial use.
 ## 🆘 Support
 
 For issues and questions:
+
 1. Check the [troubleshooting section](#-troubleshooting)
 2. Review [Google Gemini documentation](https://ai.google.dev/)
 3. Check [MongoDB documentation](https://docs.mongodb.com/)

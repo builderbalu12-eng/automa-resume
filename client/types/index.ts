@@ -68,7 +68,7 @@ export interface ApplicationRecord {
   atsScore: number;
   matchPercentage: number;
   appliedDate: Date;
-  status: 'applied' | 'interview' | 'rejected' | 'offer';
+  status: "applied" | "interview" | "rejected" | "offer";
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -90,13 +90,17 @@ export interface User {
 }
 
 export interface ExtensionMessage {
-  type: 'GET_JOB_DESCRIPTION' | 'EXTRACT_JOB_DATA' | 'SAVE_APPLICATION' | 'GET_USER_RESUME';
+  type:
+    | "GET_JOB_DESCRIPTION"
+    | "EXTRACT_JOB_DATA"
+    | "SAVE_APPLICATION"
+    | "GET_USER_RESUME";
   data?: any;
 }
 
 export interface StorageKeys {
-  USER_ID: 'resumematch_user_id';
-  MASTER_RESUME: 'resumematch_master_resume';
-  AUTH_TOKEN: 'resumematch_auth_token';
-  GEMINI_API_KEY: 'resumematch_gemini_key';
+  USER_ID: "resumematch_user_id";
+  MASTER_RESUME: "resumematch_master_resume";
+  AUTH_TOKEN: "resumematch_auth_token";
+  GEMINI_API_KEY: "resumematch_gemini_key";
 }

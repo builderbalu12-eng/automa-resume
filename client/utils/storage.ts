@@ -107,6 +107,6 @@ export async function clearAllStorage(): Promise<void> {
     });
   } else {
     // Fallback to localStorage
-    keys.forEach(key => localStorage.removeItem(key as string));
+    keys.forEach((key) => localStorage.removeItem(key as string));
   }
 }

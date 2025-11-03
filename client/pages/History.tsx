@@ -3,15 +3,22 @@ import { ArrowLeft, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ApplicationList } from "@/components/ApplicationList";
 import { ApplicationRecord } from "@/types";
-import { getApplicationHistory, updateApplicationStatus } from "@/services/mongodb";
+import {
+  getApplicationHistory,
+  updateApplicationStatus,
+} from "@/services/mongodb";
 import { getUserId } from "@/utils/storage";
 
 export const History: React.FC = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<ApplicationRecord[]>([]);
-  const [filteredApplications, setFilteredApplications] = useState<ApplicationRecord[]>([]);
+  const [filteredApplications, setFilteredApplications] = useState<
+    ApplicationRecord[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<"all" | ApplicationRecord["status"]>("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | ApplicationRecord["status"]
+  >("all");
 
   useEffect(() => {
     const loadApplications = async () => {
@@ -30,19 +37,25 @@ export const History: React.FC = () => {
     loadApplications();
   }, []);
 
-  const filterApplications = (apps: ApplicationRecord[], status: typeof statusFilter) => {
+  const filterApplications = (
+    apps: ApplicationRecord[],
+    status: typeof statusFilter,
+  ) => {
     if (status === "all") {
       setFilteredApplications(apps);
     } else {
-      setFilteredApplications(apps.filter(app => app.status === status));
+      setFilteredApplications(apps.filter((app) => app.status === status));
     }
   };
 
-  const handleStatusChange = async (appId: string, newStatus: ApplicationRecord["status"]) => {
+  const handleStatusChange = async (
+    appId: string,
+    newStatus: ApplicationRecord["status"],
+  ) => {
     try {
       await updateApplicationStatus(appId, newStatus);
-      const updated = applications.map(app =>
-        app._id === appId ? { ...app, status: newStatus } : app
+      const updated = applications.map((app) =>
+        app._id === appId ? { ...app, status: newStatus } : app,
       );
       setApplications(updated);
       filterApplications(updated, statusFilter);
@@ -57,8 +70,14 @@ export const History: React.FC = () => {
   };
 
   const handleExportCSV = () => {
-    const headers = ["Job Title", "Company", "Status", "Match Score", "Applied Date"];
-    const rows = applications.map(app => [
+    const headers = [
+      "Job Title",
+      "Company",
+      "Status",
+      "Match Score",
+      "Applied Date",
+    ];
+    const rows = applications.map((app) => [
       app.jobTitle,
       app.company,
       app.status,
@@ -68,7 +87,7 @@ export const History: React.FC = () => {
 
     const csv = [
       headers.join(","),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(",")),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
     ].join("\n");
 
     const blob = new Blob([csv], { type: "text/csv" });
@@ -105,7 +124,9 @@ export const History: React.FC = () => {
         <div className="bg-card border border-border rounded-xl p-6 mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div className="flex flex-wrap gap-2">
-              {(["all", "applied", "interview", "offer", "rejected"] as const).map((status) => (
+              {(
+                ["all", "applied", "interview", "offer", "rejected"] as const
+              ).map((status) => (
                 <button
                   key={status}
                   onClick={() => handleFilterChange(status)}
@@ -115,10 +136,13 @@ export const History: React.FC = () => {
                       : "bg-muted hover:bg-muted/80"
                   }`}
                 >
-                  {status === "all" ? "All" : status.charAt(0).toUpperCase() + status.slice(1)} (
+                  {status === "all"
+                    ? "All"
+                    : status.charAt(0).toUpperCase() + status.slice(1)}{" "}
+                  (
                   {status === "all"
                     ? applications.length
-                    : applications.filter(a => a.status === status).length}
+                    : applications.filter((a) => a.status === status).length}
                   )
                 </button>
               ))}
@@ -147,17 +171,19 @@ export const History: React.FC = () => {
               <div className="text-2xl font-bold text-primary mb-1">
                 {applications.length}
               </div>
-              <p className="text-sm text-muted-foreground">Total Applications</p>
+              <p className="text-sm text-muted-foreground">
+                Total Applications
+              </p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-green-600 mb-1">
-                {applications.filter(a => a.status === "offer").length}
+                {applications.filter((a) => a.status === "offer").length}
               </div>
               <p className="text-sm text-muted-foreground">Offers</p>
             </div>
             <div className="bg-card border border-border rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-blue-600 mb-1">
-                {applications.filter(a => a.status === "interview").length}
+                {applications.filter((a) => a.status === "interview").length}
               </div>
               <p className="text-sm text-muted-foreground">Interviews</p>
             </div>
@@ -165,8 +191,11 @@ export const History: React.FC = () => {
               <div className="text-2xl font-bold text-primary mb-1">
                 {applications.length > 0
                   ? Math.round(
-                      (applications.reduce((sum, a) => sum + (a.atsScore || a.matchPercentage || 0), 0) /
-                        applications.length)
+                      applications.reduce(
+                        (sum, a) =>
+                          sum + (a.atsScore || a.matchPercentage || 0),
+                        0,
+                      ) / applications.length,
                     )
                   : 0}
                 %

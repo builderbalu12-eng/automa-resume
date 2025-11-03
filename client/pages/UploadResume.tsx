@@ -64,7 +64,8 @@ export const UploadResume: React.FC = () => {
               Resume Successfully Uploaded!
             </h1>
             <p className="text-lg text-muted-foreground mb-4">
-              Your master resume has been saved and is ready to be tailored for job applications.
+              Your master resume has been saved and is ready to be tailored for
+              job applications.
             </p>
 
             <div className="bg-card border border-border rounded-lg p-6 mb-8 text-left">
@@ -80,15 +81,21 @@ export const UploadResume: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-muted-foreground">Skills</p>
-                  <p className="font-medium">{resume.skills.length} skills identified</p>
+                  <p className="font-medium">
+                    {resume.skills.length} skills identified
+                  </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Experience</p>
-                  <p className="font-medium">{resume.experience.length} positions</p>
+                  <p className="font-medium">
+                    {resume.experience.length} positions
+                  </p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Education</p>
-                  <p className="font-medium">{resume.education.length} degrees</p>
+                  <p className="font-medium">
+                    {resume.education.length} degrees
+                  </p>
                 </div>
               </div>
             </div>
@@ -131,12 +138,16 @@ export const UploadResume: React.FC = () => {
             Upload Your Master Resume
           </h1>
           <p className="text-lg text-muted-foreground">
-            Upload your professional resume as a DOCX file. We'll parse it and use it to tailor resumes for job applications.
+            Upload your professional resume as a DOCX file. We'll parse it and
+            use it to tailor resumes for job applications.
           </p>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-8 mb-8">
-          <ResumeUpload onUploadSuccess={handleUploadSuccess} isLoading={isLoading} />
+          <ResumeUpload
+            onUploadSuccess={handleUploadSuccess}
+            isLoading={isLoading}
+          />
 
           {error && (
             <div className="mt-6 p-4 rounded-lg bg-destructive/10 border border-destructive/20">

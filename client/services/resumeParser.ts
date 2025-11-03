@@ -10,7 +10,7 @@ export async function parseDocxFile(file: File): Promise<ResumeData> {
 }
 
 function parseResumeText(text: string): ResumeData {
-  const lines = text.split("\n").filter(line => line.trim());
+  const lines = text.split("\n").filter((line) => line.trim());
 
   // Extract contact info from first lines
   const contact: ContactInfo = {
@@ -25,7 +25,11 @@ function parseResumeText(text: string): ResumeData {
   const skills = extractSection(text, "skills", "experience");
   const experience = extractExperience(text);
   const education = extractEducation(text);
-  const summary = extractSection(text, "summary|profile|objective", "experience");
+  const summary = extractSection(
+    text,
+    "summary|profile|objective",
+    "experience",
+  );
 
   return {
     contact,
@@ -42,7 +46,9 @@ function extractEmail(text: string): string {
 }
 
 function extractPhone(text: string): string {
-  const match = text.match(/(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/);
+  const match = text.match(
+    /(\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/,
+  );
   return match ? match[0] : "";
 }
 
@@ -54,7 +60,7 @@ function extractUrl(text: string): string {
 function extractSection(
   text: string,
   startKeyword: string,
-  endKeyword: string
+  endKeyword: string,
 ): string[] {
   const startRegex = new RegExp(startKeyword, "i");
   const endRegex = new RegExp(endKeyword, "i");
@@ -69,14 +75,15 @@ function extractSection(
 
   return sectionText
     .split(/[,\n]/)
-    .map(item => item.trim())
-    .filter(item => item.length > 0);
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
 }
 
 function extractExperience(text: string): Experience[] {
   const experiences: Experience[] = [];
-  
-  const experienceRegex = /([A-Z][a-z\s]+)\s+(?:at|@)?\s+([A-Z][a-z\s&\-\.]+)(\d{4})?[-–](\d{4}|present|now)?/gi;
+
+  const experienceRegex =
+    /([A-Z][a-z\s]+)\s+(?:at|@)?\s+([A-Z][a-z\s&\-\.]+)(\d{4})?[-–](\d{4}|present|now)?/gi;
   let match;
 
   while ((match = experienceRegex.exec(text)) !== null) {
@@ -95,8 +102,9 @@ function extractExperience(text: string): Experience[] {
 
 function extractEducation(text: string): Education[] {
   const educations: Education[] = [];
-  
-  const degreeRegex = /(Bachelor|Master|PhD|B\.S\.|M\.S\.|B\.A\.|M\.A\.|Associate).*?(?:in|of)?\s+([A-Za-z\s]+?)(?:from|at|,|\()?([A-Z][a-z\s\-\.&]+(?:University|College|Institute))/gi;
+
+  const degreeRegex =
+    /(Bachelor|Master|PhD|B\.S\.|M\.S\.|B\.A\.|M\.A\.|Associate).*?(?:in|of)?\s+([A-Za-z\s]+?)(?:from|at|,|\()?([A-Z][a-z\s\-\.&]+(?:University|College|Institute))/gi;
   let match;
 
   while ((match = degreeRegex.exec(text)) !== null) {

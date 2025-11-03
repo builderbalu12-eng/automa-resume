@@ -8,7 +8,9 @@ let client: GoogleGenerativeAI | null = null;
 function initGemini(): GoogleGenerativeAI {
   if (client) return client;
   if (!GEMINI_API_KEY) {
-    throw new Error("Gemini API key not configured. Set VITE_GOOGLE_GEMINI_API_KEY in .env");
+    throw new Error(
+      "Gemini API key not configured. Set VITE_GOOGLE_GEMINI_API_KEY in .env",
+    );
   }
   client = new GoogleGenerativeAI(GEMINI_API_KEY);
   return client;
@@ -25,10 +27,10 @@ export async function analyzeMasterResume(resume: ResumeData): Promise<string> {
   Skills: ${resume.skills.join(", ")}
   
   Experience:
-  ${resume.experience.map(e => `${e.title} at ${e.company} (${e.startDate} - ${e.endDate || "Present"})`).join("\n")}
+  ${resume.experience.map((e) => `${e.title} at ${e.company} (${e.startDate} - ${e.endDate || "Present"})`).join("\n")}
   
   Education:
-  ${resume.education.map(e => `${e.degree} in ${e.field} from ${e.institution} (${e.graduationDate})`).join("\n")}
+  ${resume.education.map((e) => `${e.degree} in ${e.field} from ${e.institution} (${e.graduationDate})`).join("\n")}
   
   Provide a 2-3 sentence analysis of this candidate's profile.`;
 
@@ -36,7 +38,9 @@ export async function analyzeMasterResume(resume: ResumeData): Promise<string> {
   return result.response.text();
 }
 
-export async function extractJobRequirements(jobDescription: string): Promise<JobDescription> {
+export async function extractJobRequirements(
+  jobDescription: string,
+): Promise<JobDescription> {
   const genAI = initGemini();
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
@@ -54,7 +58,7 @@ export async function extractJobRequirements(jobDescription: string): Promise<Jo
 
   const result = await model.generateContent(prompt);
   const text = result.response.text();
-  
+
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
@@ -75,7 +79,7 @@ export async function extractJobRequirements(jobDescription: string): Promise<Jo
 
 export async function tailorResumeForJob(
   masterResume: ResumeData,
-  jobDescription: JobDescription
+  jobDescription: JobDescription,
 ): Promise<ResumeData> {
   const genAI = initGemini();
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -92,7 +96,7 @@ export async function tailorResumeForJob(
   Skills: ${masterResume.skills.join(", ")}
   
   Experience:
-  ${masterResume.experience.map(e => `${e.title} at ${e.company}: ${e.description.join(" ")}`).join("\n\n")}
+  ${masterResume.experience.map((e) => `${e.title} at ${e.company}: ${e.description.join(" ")}`).join("\n\n")}
   
   Provide a tailored summary and rewritten experience descriptions that:
   1. Highlight relevant skills matching the job
@@ -116,13 +120,13 @@ export async function tailorResumeForJob(
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
-      
+
       const tailoredResume: ResumeData = {
         ...masterResume,
         summary: parsed.tailoredSummary || masterResume.summary,
         experience: masterResume.experience.map((exp, idx) => {
           const tailored = parsed.tailoredExperience?.find(
-            (t: any) => t.originalTitle === exp.title
+            (t: any) => t.originalTitle === exp.title,
           );
           return {
             ...exp,
@@ -142,7 +146,7 @@ export async function tailorResumeForJob(
 
 export async function calculateATSScore(
   resume: ResumeData,
-  jobDescription: JobDescription
+  jobDescription: JobDescription,
 ): Promise<ATSScore> {
   const genAI = initGemini();
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -151,8 +155,12 @@ export async function calculateATSScore(
     resume.contact.name,
     resume.summary,
     resume.skills.join(" "),
-    resume.experience.map(e => `${e.title} ${e.company} ${e.description.join(" ")}`).join(" "),
-    resume.education.map(e => `${e.degree} ${e.field} ${e.institution}`).join(" "),
+    resume.experience
+      .map((e) => `${e.title} ${e.company} ${e.description.join(" ")}`)
+      .join(" "),
+    resume.education
+      .map((e) => `${e.degree} ${e.field} ${e.institution}`)
+      .join(" "),
   ].join(" ");
 
   const prompt = `Analyze this resume against a job description for ATS (Applicant Tracking System) compatibility.

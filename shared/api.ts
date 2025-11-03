@@ -68,7 +68,7 @@ export interface ApplicationRecord {
   atsScore: number;
   matchPercentage: number;
   appliedDate: Date;
-  status: 'applied' | 'interview' | 'rejected' | 'offer';
+  status: "applied" | "interview" | "rejected" | "offer";
   createdAt?: Date;
   updatedAt?: Date;
 }

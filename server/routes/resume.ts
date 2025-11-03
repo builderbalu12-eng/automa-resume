@@ -84,7 +84,7 @@ export const updateApplicationStatus: RequestHandler = (req, res) => {
   const { status } = req.body;
 
   for (const [userId, apps] of applications.entries()) {
-    const app = apps.find(a => a._id === appId);
+    const app = apps.find((a) => a._id === appId);
     if (app) {
       app.status = status;
       app.updatedAt = new Date();

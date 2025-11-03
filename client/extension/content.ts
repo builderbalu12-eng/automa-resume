@@ -1,4 +1,7 @@
-import { extractJobDescriptionFromDOM, createJobExtractionButton } from "@/utils/jobExtractor";
+import {
+  extractJobDescriptionFromDOM,
+  createJobExtractionButton,
+} from "@/utils/jobExtractor";
 import { saveToStorage, getFromStorage } from "@/utils/storage";
 
 let injectedButton = false;
@@ -13,7 +16,9 @@ function injectButton() {
   button.addEventListener("click", async () => {
     const jobData = extractJobDescriptionFromDOM();
     if (!jobData) {
-      alert("Could not extract job description. Please make sure you're on a job posting page.");
+      alert(
+        "Could not extract job description. Please make sure you're on a job posting page.",
+      );
       return;
     }
 
@@ -21,14 +26,11 @@ function injectButton() {
     await saveToStorage("currentJobData", jobData);
 
     // Open extension popup
-    chrome.runtime.sendMessage(
-      { action: "openPopup", jobData },
-      (response) => {
-        if (response?.success) {
-          alert("Opening ResumeMatch Pro...");
-        }
+    chrome.runtime.sendMessage({ action: "openPopup", jobData }, (response) => {
+      if (response?.success) {
+        alert("Opening ResumeMatch Pro...");
       }
-    );
+    });
   });
 }
 

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Download, ExternalLink, MoreVertical, CheckCircle, Clock, XCircle } from "lucide-react";
+import {
+  Download,
+  ExternalLink,
+  MoreVertical,
+  CheckCircle,
+  Clock,
+  XCircle,
+} from "lucide-react";
 import { ApplicationRecord } from "@/types";
 import { format } from "date-fns";
 
@@ -81,7 +88,9 @@ export const ApplicationList: React.FC<ApplicationListProps> = ({
               </div>
 
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                <div className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor(app.status)}`}>
+                <div
+                  className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor(app.status)}`}
+                >
                   {getStatusIcon(app.status)}
                   {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
                 </div>
@@ -109,7 +118,9 @@ export const ApplicationList: React.FC<ApplicationListProps> = ({
 
             <div className="flex gap-2 ml-4">
               <button
-                onClick={() => setExpandedId(expandedId === app._id ? null : app._id)}
+                onClick={() =>
+                  setExpandedId(expandedId === app._id ? null : app._id)
+                }
                 className="p-2 hover:bg-muted rounded-lg transition-colors"
               >
                 <MoreVertical className="h-4 w-4" />
@@ -121,9 +132,13 @@ export const ApplicationList: React.FC<ApplicationListProps> = ({
             <div className="mt-4 pt-4 border-t border-border space-y-3">
               {onStatusChange && (
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-2">Change Status</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">
+                    Change Status
+                  </p>
                   <div className="flex gap-2 flex-wrap">
-                    {(["applied", "interview", "offer", "rejected"] as const).map((status) => (
+                    {(
+                      ["applied", "interview", "offer", "rejected"] as const
+                    ).map((status) => (
                       <button
                         key={status}
                         onClick={() => {
@@ -144,9 +159,12 @@ export const ApplicationList: React.FC<ApplicationListProps> = ({
               )}
 
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">
+                  Description
+                </p>
                 <p className="text-sm text-foreground line-clamp-3">
-                  {app.jobDescription?.description || "No description available"}
+                  {app.jobDescription?.description ||
+                    "No description available"}
                 </p>
               </div>
             </div>

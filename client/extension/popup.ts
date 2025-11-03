@@ -1,5 +1,9 @@
 import { getMasterResume, getFromStorage } from "@/utils/storage";
-import { tailorResumeForJob, calculateATSScore, extractJobRequirements } from "@/services/gemini";
+import {
+  tailorResumeForJob,
+  calculateATSScore,
+  extractJobRequirements,
+} from "@/services/gemini";
 import { saveApplication } from "@/services/mongodb";
 import { downloadResume } from "@/services/resumeGenerator";
 import { ResumeData, JobDescription, ApplicationRecord } from "@/types";
@@ -27,9 +31,13 @@ const buttonsEl = document.getElementById("buttons")!;
 const mainContentEl = document.getElementById("main-content")!;
 
 const tailorBtn = document.getElementById("tailor-btn") as HTMLButtonElement;
-const downloadBtn = document.getElementById("download-btn") as HTMLButtonElement;
+const downloadBtn = document.getElementById(
+  "download-btn",
+) as HTMLButtonElement;
 const saveBtn = document.getElementById("save-btn") as HTMLButtonElement;
-const dashboardLink = document.getElementById("dashboard-link") as HTMLAnchorElement;
+const dashboardLink = document.getElementById(
+  "dashboard-link",
+) as HTMLAnchorElement;
 
 // Initialize
 async function init() {
@@ -52,7 +60,7 @@ async function init() {
             state.jobData = response.jobData;
           }
           updateUI();
-        }
+        },
       );
     }
 
@@ -84,7 +92,7 @@ function updateUI() {
     const statusText = statusEl.querySelector(".status-text")!;
     statusIcon.textContent = "⚠️";
     statusText.innerHTML =
-      '<strong>No Master Resume</strong><span>Upload your resume on the dashboard first</span>';
+      "<strong>No Master Resume</strong><span>Upload your resume on the dashboard first</span>";
 
     dashboardLink.onclick = (e) => {
       e.preventDefault();
@@ -98,8 +106,8 @@ function updateUI() {
   // Show job info if available
   if (state.jobData) {
     jobInfoEl.classList.remove("hidden");
-    (document.getElementById("job-title")!).textContent = state.jobData.title;
-    (document.getElementById("job-company")!).textContent = state.jobData.company;
+    document.getElementById("job-title")!.textContent = state.jobData.title;
+    document.getElementById("job-company")!.textContent = state.jobData.company;
 
     // Show buttons
     buttonsEl.classList.remove("hidden");
@@ -108,7 +116,7 @@ function updateUI() {
     const statusText = statusEl.querySelector(".status-text")!;
     statusIcon.textContent = "✓";
     statusText.innerHTML =
-      '<strong>Ready to Tailor</strong><span>Click below to optimize your resume for this job</span>';
+      "<strong>Ready to Tailor</strong><span>Click below to optimize your resume for this job</span>";
   } else {
     // Show status for non-job pages
     statusEl.classList.remove("hidden");
@@ -116,7 +124,7 @@ function updateUI() {
     const statusText = statusEl.querySelector(".status-text")!;
     statusIcon.textContent = "ℹ️";
     statusText.innerHTML =
-      '<strong>No Job Posting Found</strong><span>Open this extension on a job posting page</span>';
+      "<strong>No Job Posting Found</strong><span>Open this extension on a job posting page</span>";
   }
 }
 
@@ -128,13 +136,21 @@ tailorBtn.addEventListener("click", async () => {
 
   try {
     // Extract job requirements
-    const jobDescription = await extractJobRequirements(state.jobData.description);
+    const jobDescription = await extractJobRequirements(
+      state.jobData.description,
+    );
 
     // Tailor resume
-    state.tailoredResume = await tailorResumeForJob(state.masterResume, jobDescription);
+    state.tailoredResume = await tailorResumeForJob(
+      state.masterResume,
+      jobDescription,
+    );
 
     // Calculate ATS score
-    const atsScoreData = await calculateATSScore(state.tailoredResume, jobDescription);
+    const atsScoreData = await calculateATSScore(
+      state.tailoredResume,
+      jobDescription,
+    );
     state.atsScore = atsScoreData.score;
 
     loadingEl.classList.add("hidden");
@@ -158,7 +174,11 @@ downloadBtn.addEventListener("click", async () => {
   downloadBtn.disabled = true;
 
   try {
-    await downloadResume(state.tailoredResume, state.jobData.company, state.jobData.title);
+    await downloadResume(
+      state.tailoredResume,
+      state.jobData.company,
+      state.jobData.title,
+    );
     successEl.classList.remove("hidden");
     successEl.textContent = "✓ Resume downloaded!";
     successEl.classList.add("success");

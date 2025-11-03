@@ -4,7 +4,9 @@ export function extractJobDescriptionFromDOM(): JobDescription | null {
   // LinkedIn job description
   const linkedInTitle = document.querySelector("h2.show-more-less-html__title");
   const linkedInCompany = document.querySelector('a[href*="company"]');
-  const linkedInDescription = document.querySelector(".show-more-less-html__markup");
+  const linkedInDescription = document.querySelector(
+    ".show-more-less-html__markup",
+  );
 
   if (linkedInTitle && linkedInDescription) {
     return {
@@ -18,7 +20,9 @@ export function extractJobDescriptionFromDOM(): JobDescription | null {
   }
 
   // Indeed job description
-  const indeedTitle = document.querySelector("h1.jobsearch-JobInfoHeader-title");
+  const indeedTitle = document.querySelector(
+    "h1.jobsearch-JobInfoHeader-title",
+  );
   const indeedCompany = document.querySelector("a[data-testid='company-name']");
   const indeedDescription = document.querySelector("[id='jobDescriptionText']");
 
@@ -51,7 +55,9 @@ export function extractJobDescriptionFromDOM(): JobDescription | null {
   // Glassdoor job description
   const glassdoorTitle = document.querySelector('[data-test="jobTitle"]');
   const glassdoorCompany = document.querySelector('[data-test="companyName"]');
-  const glassdoorDescription = document.querySelector('[data-test="JobDescription"]');
+  const glassdoorDescription = document.querySelector(
+    '[data-test="JobDescription"]',
+  );
 
   if (glassdoorTitle && glassdoorDescription) {
     return {
@@ -71,12 +77,12 @@ export function extractRequirements(text: string): string[] {
   const requirements: string[] = [];
 
   const requirementsSection = text.match(
-    /(?:requirement|skill|qualification|must have|should have)[\s\S]*?(?:nice to have|about|$/i
+    /(?:requirement|skill|qualification|must have|should have)[\s\S]*?(?:nice to have|about|$/i,
   );
 
   if (requirementsSection) {
     const bullets = requirementsSection[0].match(/[•\-*]\s+([^\n]+)/g) || [];
-    bullets.forEach(bullet => {
+    bullets.forEach((bullet) => {
       const cleaned = bullet.replace(/^[•\-*]\s+/, "").trim();
       if (cleaned.length > 5) {
         requirements.push(cleaned);
@@ -176,7 +182,7 @@ export function extractSkills(text: string): string[] {
   const lowerText = text.toLowerCase();
   const foundSkills = new Set<string>();
 
-  commonSkills.forEach(skill => {
+  commonSkills.forEach((skill) => {
     if (lowerText.includes(skill)) {
       foundSkills.add(skill);
     }

@@ -3,16 +3,8 @@
   "name": "ResumeMatch Pro",
   "version": "1.0.0",
   "description": "AI-powered resume tailoring for job applications",
-  "permissions": [
-    "storage",
-    "tabs",
-    "scripting",
-    "downloads"
-  ],
-  "host_permissions": [
-    "https://*/*",
-    "http://*/*"
-  ],
+  "permissions": ["storage", "tabs", "scripting", "downloads"],
+  "host_permissions": ["https://*/*", "http://*/*"],
   "background": {
     "service_worker": "src/background/background.ts",
     "type": "module"

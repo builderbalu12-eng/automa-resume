@@ -1,19 +1,27 @@
 import { getFromStorage, saveToStorage } from "@/utils/storage";
 import { generateResumeDocx, downloadResume } from "@/services/resumeGenerator";
-import { tailorResumeForJob, calculateATSScore, extractJobRequirements } from "@/services/gemini";
+import {
+  tailorResumeForJob,
+  calculateATSScore,
+  extractJobRequirements,
+} from "@/services/gemini";
 import { ApplicationRecord, ResumeData } from "@/types";
 import { saveApplication } from "@/services/mongodb";
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "tailorResume") {
     handleTailoreResume(request.masterResume, request.jobData)
-      .then(result => sendResponse(result))
-      .catch(error => sendResponse({ error: error.message }));
+      .then((result) => sendResponse(result))
+      .catch((error) => sendResponse({ error: error.message }));
     return true;
   } else if (request.action === "generateAndDownload") {
-    handleGenerateAndDownload(request.tailoredResume, request.company, request.jobTitle)
-      .then(result => sendResponse(result))
-      .catch(error => sendResponse({ error: error.message }));
+    handleGenerateAndDownload(
+      request.tailoredResume,
+      request.company,
+      request.jobTitle,
+    )
+      .then((result) => sendResponse(result))
+      .catch((error) => sendResponse({ error: error.message }));
     return true;
   }
 });
@@ -24,7 +32,10 @@ async function handleTailoreResume(masterResume: ResumeData, jobData: any) {
     const jobDescription = await extractJobRequirements(jobData.description);
 
     // Tailor resume
-    const tailoredResume = await tailorResumeForJob(masterResume, jobDescription);
+    const tailoredResume = await tailorResumeForJob(
+      masterResume,
+      jobDescription,
+    );
 
     // Calculate ATS score
     const atsScore = await calculateATSScore(tailoredResume, jobDescription);
@@ -44,7 +55,7 @@ async function handleTailoreResume(masterResume: ResumeData, jobData: any) {
 async function handleGenerateAndDownload(
   tailoredResume: ResumeData,
   company: string,
-  jobTitle: string
+  jobTitle: string,
 ) {
   try {
     const blob = await generateResumeDocx(tailoredResume, company, jobTitle);
@@ -81,7 +92,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       "glassdoor.com",
     ];
 
-    const isJobSite = jobSites.some(site => tab.url?.includes(site));
+    const isJobSite = jobSites.some((site) => tab.url?.includes(site));
 
     if (isJobSite) {
       // Inject content script

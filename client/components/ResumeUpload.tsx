@@ -109,7 +109,9 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
           {isLoading && (
             <div className="flex items-center gap-2">
               <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" />
-              <span className="text-sm text-muted-foreground">Processing...</span>
+              <span className="text-sm text-muted-foreground">
+                Processing...
+              </span>
             </div>
           )}
         </div>
@@ -121,7 +123,8 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({
           <div>
             <p className="text-sm font-medium text-destructive">{error}</p>
             <p className="text-xs text-destructive/80 mt-1">
-              Please ensure your resume contains contact info, skills, experience, and education.
+              Please ensure your resume contains contact info, skills,
+              experience, and education.
             </p>
           </div>
         </div>
