@@ -1,0 +1,112 @@
+import { ResumeData, User } from "@/types";
+
+const STORAGE_KEYS = {
+  USER_ID: "resumematch_user_id",
+  MASTER_RESUME: "resumematch_master_resume",
+  AUTH_TOKEN: "resumematch_auth_token",
+  GEMINI_API_KEY: "resumematch_gemini_key",
+  LAST_SYNC: "resumematch_last_sync",
+};
+
+export async function saveToStorage(key: string, value: any): Promise<void> {
+  if (typeof chrome !== "undefined" && chrome.storage) {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.set({ [key]: JSON.stringify(value) }, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      });
+    });
+  } else {
+    // Fallback to localStorage in web app
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+}
+
+export async function getFromStorage(key: string): Promise<any> {
+  if (typeof chrome !== "undefined" && chrome.storage) {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get([key], (result) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          const value = result[key];
+          resolve(value ? JSON.parse(value) : null);
+        }
+      });
+    });
+  } else {
+    // Fallback to localStorage in web app
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  }
+}
+
+export async function removeFromStorage(key: string): Promise<void> {
+  if (typeof chrome !== "undefined" && chrome.storage) {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.remove([key], () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      });
+    });
+  } else {
+    // Fallback to localStorage in web app
+    localStorage.removeItem(key);
+  }
+}
+
+export async function getUserId(): Promise<string | null> {
+  return getFromStorage(STORAGE_KEYS.USER_ID);
+}
+
+export async function setUserId(userId: string): Promise<void> {
+  return saveToStorage(STORAGE_KEYS.USER_ID, userId);
+}
+
+export async function getMasterResume(): Promise<ResumeData | null> {
+  return getFromStorage(STORAGE_KEYS.MASTER_RESUME);
+}
+
+export async function setMasterResume(resume: ResumeData): Promise<void> {
+  return saveToStorage(STORAGE_KEYS.MASTER_RESUME, resume);
+}
+
+export async function getAuthToken(): Promise<string | null> {
+  return getFromStorage(STORAGE_KEYS.AUTH_TOKEN);
+}
+
+export async function setAuthToken(token: string): Promise<void> {
+  return saveToStorage(STORAGE_KEYS.AUTH_TOKEN, token);
+}
+
+export async function getGeminiApiKey(): Promise<string | null> {
+  return getFromStorage(STORAGE_KEYS.GEMINI_API_KEY);
+}
+
+export async function setGeminiApiKey(key: string): Promise<void> {
+  return saveToStorage(STORAGE_KEYS.GEMINI_API_KEY, key);
+}
+
+export async function clearAllStorage(): Promise<void> {
+  const keys = Object.values(STORAGE_KEYS);
+  if (typeof chrome !== "undefined" && chrome.storage) {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.remove(keys, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve();
+        }
+      });
+    });
+  } else {
+    // Fallback to localStorage
+    keys.forEach(key => localStorage.removeItem(key as string));
+  }
+}
