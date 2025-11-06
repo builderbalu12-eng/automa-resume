@@ -157,7 +157,9 @@ export const TailorResume: React.FC = () => {
         <div className="max-w-2xl mx-auto px-4">
           <div className="text-center py-12">
             <p className="text-lg text-red-600 mb-4">{error}</p>
-            <p className="text-muted-foreground">Redirecting to upload page...</p>
+            <p className="text-muted-foreground">
+              Redirecting to upload page...
+            </p>
           </div>
         </div>
       </div>
@@ -359,7 +361,9 @@ export const TailorResume: React.FC = () => {
                       <p className="text-sm text-muted-foreground mb-1">
                         Job Details
                       </p>
-                      <p className="font-semibold">{tailorState.jobData.title}</p>
+                      <p className="font-semibold">
+                        {tailorState.jobData.title}
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         {tailorState.jobData.company}
                       </p>
