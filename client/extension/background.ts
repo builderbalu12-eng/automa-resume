@@ -1,86 +1,3 @@
-import { getFromStorage, saveToStorage } from "@/utils/storage";
-import { generateResumeDocx, downloadResume } from "@/services/resumeGenerator";
-import {
-  tailorResumeForJob,
-  calculateATSScore,
-  extractJobRequirements,
-} from "@/services/gemini";
-import { ApplicationRecord, ResumeData } from "@/types";
-import { saveApplication } from "@/services/mongodb";
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "tailorResume") {
-    handleTailoreResume(request.masterResume, request.jobData)
-      .then((result) => sendResponse(result))
-      .catch((error) => sendResponse({ error: error.message }));
-    return true;
-  } else if (request.action === "generateAndDownload") {
-    handleGenerateAndDownload(
-      request.tailoredResume,
-      request.company,
-      request.jobTitle,
-    )
-      .then((result) => sendResponse(result))
-      .catch((error) => sendResponse({ error: error.message }));
-    return true;
-  }
-});
-
-async function handleTailoreResume(masterResume: ResumeData, jobData: any) {
-  try {
-    // Extract requirements from job description
-    const jobDescription = await extractJobRequirements(jobData.description);
-
-    // Tailor resume
-    const tailoredResume = await tailorResumeForJob(
-      masterResume,
-      jobDescription,
-    );
-
-    // Calculate ATS score
-    const atsScore = await calculateATSScore(tailoredResume, jobDescription);
-
-    return {
-      success: true,
-      tailoredResume,
-      atsScore,
-      jobDescription,
-    };
-  } catch (error) {
-    console.error("Error tailoring resume:", error);
-    throw error;
-  }
-}
-
-async function handleGenerateAndDownload(
-  tailoredResume: ResumeData,
-  company: string,
-  jobTitle: string,
-) {
-  try {
-    const blob = await generateResumeDocx(tailoredResume, company, jobTitle);
-    const url = URL.createObjectURL(blob);
-
-    const today = new Date().toISOString().split("T")[0];
-    const filename = `Resume_${company}_${jobTitle}_${today}.docx`;
-
-    // Use Chrome downloads API
-    chrome.downloads.download({
-      url,
-      filename,
-      saveAs: false,
-    });
-
-    return {
-      success: true,
-      message: "Resume downloaded successfully",
-    };
-  } catch (error) {
-    console.error("Error generating/downloading resume:", error);
-    throw error;
-  }
-}
-
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete") {
     // Check if tab is a job posting site
@@ -90,19 +7,46 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       "naukri.com",
       "monster.com",
       "glassdoor.com",
+      "dice.com",
+      "ziprecruiter.com",
+      "builtin.com",
+      "techcrunch.com",
+      "careers",
     ];
 
     const isJobSite = jobSites.some((site) => tab.url?.includes(site));
 
-    if (isJobSite) {
-      // Inject content script
-      chrome.tabs.sendMessage(tabId, { action: "injectButton" }).catch(() => {
-        // Content script not ready yet, it will inject itself
-      });
-
-      // Update extension badge
+    if (isJobSite && tab.id) {
+      // Update extension badge to indicate it's a job site
       chrome.action.setBadgeText({ text: "✓", tabId });
       chrome.action.setBadgeBackgroundColor({ color: "#6633ff", tabId });
+
+      // Inject content script
+      chrome.scripting.executeScript({
+        target: { tabId },
+        files: ["src/content/content.ts"],
+      }).catch(() => {
+        // Script injection failed, content script may already be injected
+        console.log("Content script injection skipped");
+      });
     }
   }
+});
+
+// Handle download requests from popup if needed
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "downloadResume") {
+    const { url, filename } = request;
+    chrome.downloads.download({
+      url,
+      filename,
+      saveAs: false,
+    });
+    sendResponse({ success: true });
+  }
+});
+
+// Initialize extension on install
+chrome.runtime.onInstalled.addListener(() => {
+  console.log("ResumeMatch Pro extension installed");
 });
