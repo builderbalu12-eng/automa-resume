@@ -157,10 +157,6 @@
     background-clip: text;
   }
 
-  .ring-primary {
-    @apply ring-primary;
-  }
-
   .shadow-glow {
     @apply shadow-lg;
     box-shadow: 0 10px 30px rgba(102, 51, 153, 0.2);
