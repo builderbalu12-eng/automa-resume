@@ -27,35 +27,32 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [resume, userId] = await Promise.all([
-          getMasterResume(),
-          getUserId(),
-        ]);
+        const resume = await getMasterResume();
         setMasterResume(resume);
 
-        if (userId) {
-          const apps = await getApplicationHistory(userId);
-          setRecentApplications(apps.slice(0, 5));
+        const apps = await getApplicationHistory();
+        setRecentApplications(apps.slice(0, 5));
 
-          if (apps.length > 0) {
-            const avgScore = Math.round(
-              apps.reduce(
-                (sum, a) => sum + (a.atsScore || a.matchPercentage || 0),
-                0,
-              ) / apps.length,
-            );
-            const successCount = apps.filter(
-              (a) => a.status === "offer" || a.status === "interview",
-            ).length;
-            const successRate = Math.round((successCount / apps.length) * 100);
+        if (apps.length > 0) {
+          const avgScore = Math.round(
+            apps.reduce(
+              (sum, a) => sum + (a.atsScore || a.matchPercentage || 0),
+              0,
+            ) / apps.length,
+          );
+          const successCount = apps.filter(
+            (a) => a.status === "offer" || a.status === "interview",
+          ).length;
+          const successRate = Math.round((successCount / apps.length) * 100);
 
-            setStats({
-              totalApps: apps.length,
-              avgScore,
-              successRate,
-            });
-          }
+          setStats({
+            totalApps: apps.length,
+            avgScore,
+            successRate,
+          });
         }
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
       } finally {
         setIsLoading(false);
       }
