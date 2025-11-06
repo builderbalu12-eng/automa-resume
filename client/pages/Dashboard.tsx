@@ -275,7 +275,7 @@ export const Dashboard: React.FC = () => {
           </Link>
         ) : (
           <Link
-            to="/upload"
+            to="/tailor"
             className="inline-flex items-center px-8 py-3 rounded-lg bg-gradient-primary text-primary-foreground font-semibold hover:shadow-glow transition-all hover:-translate-y-0.5"
           >
             Tailor Your Resume
