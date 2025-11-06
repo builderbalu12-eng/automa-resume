@@ -24,11 +24,11 @@ export const UploadResume: React.FC = () => {
       // Save to local storage
       await setMasterResume(uploadedResume);
 
-      // Optionally save to MongoDB (requires API endpoint)
+      // Save resume data
       try {
-        await saveResume(userId, uploadedResume);
+        await saveResume(uploadedResume);
       } catch (e) {
-        console.warn("Could not save to MongoDB:", e);
+        console.warn("Could not save resume:", e);
         // Continue anyway, data is in local storage
       }
 
