@@ -119,7 +119,11 @@ export const ApplicationList: React.FC<ApplicationListProps> = ({
             <div className="flex gap-2 ml-4">
               <button
                 onClick={() =>
-                  setExpandedId(expandedId === (app.id || app._id) ? null : (app.id || app._id))
+                  setExpandedId(
+                    expandedId === (app.id || app._id)
+                      ? null
+                      : app.id || app._id,
+                  )
                 }
                 className="p-2 hover:bg-muted rounded-lg transition-colors"
               >

@@ -39,9 +39,7 @@ export async function getUserResume(): Promise<ResumeData | null> {
   }
 }
 
-export async function saveResume(
-  resume: ResumeData,
-): Promise<ResumeData> {
+export async function saveResume(resume: ResumeData): Promise<ResumeData> {
   try {
     await setMasterResume(resume);
     return resume;

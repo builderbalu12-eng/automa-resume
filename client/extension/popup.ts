@@ -113,7 +113,8 @@ function updateUI() {
     const jobTitleEl = document.getElementById("job-title");
     const jobCompanyEl = document.getElementById("job-company");
     if (jobTitleEl) jobTitleEl.textContent = state.jobData.title || "Unknown";
-    if (jobCompanyEl) jobCompanyEl.textContent = state.jobData.company || "Unknown";
+    if (jobCompanyEl)
+      jobCompanyEl.textContent = state.jobData.company || "Unknown";
 
     // Show buttons
     buttonsEl.classList.remove("hidden");

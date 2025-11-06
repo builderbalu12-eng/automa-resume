@@ -19,6 +19,7 @@ ResumeMatch Pro is now fully configured as a Chrome extension that works entirel
 ## Supported Job Sites
 
 The extension currently works on:
+
 - LinkedIn (linkedin.com)
 - Indeed (indeed.com)
 - Naukri (naukri.com)
@@ -71,6 +72,7 @@ pnpm run dev
 ### In Development Mode
 
 1. **Start the dev server**:
+
    ```bash
    pnpm run dev
    ```
@@ -180,27 +182,32 @@ client/
 ### Key Services
 
 #### Background Service Worker (`client/extension/background.ts`)
+
 - Monitors tab changes for job site detection
 - Updates extension badge when on job sites
 - Injects content scripts
 - Handles download requests
 
 #### Content Script (`client/extension/content.ts`)
+
 - Injects "Match & Download Resume" button on job pages
 - Extracts job data from page DOM
 - Listens for messages from popup
 
 #### Popup (`client/extension/popup.ts` & `popup.html`)
+
 - Shows job information
 - Handles resume tailoring workflow
 - Downloads and saves applications
 
 #### Storage Service (`client/utils/storage.ts`)
+
 - Abstracts Chrome storage API and localStorage
 - Provides promise-based interface
 - Works in both extension and web contexts
 
 #### MongoDB Service (`client/services/mongodb.ts`)
+
 - **Fully refactored to use browser storage**
 - No backend API calls
 - Stores applications locally
@@ -209,30 +216,38 @@ client/
 ## Common Issues and Solutions
 
 ### "No Master Resume" Error
+
 **Problem**: Popup shows "No Master Resume" warning
-**Solution**: 
+**Solution**:
+
 1. Go to http://localhost:8080
 2. Click "Tailor Your Resume"
 3. Upload a DOCX resume file
 4. The master resume is now stored in browser storage
 
 ### "No Job Posting Found" Error
+
 **Problem**: Extension doesn't detect job posting
 **Solution**:
+
 1. Make sure you're on a supported job site
 2. The page might not have loaded completely - refresh and try again
 3. Some job sites have different HTML structures - manual job entry is coming soon
 
 ### AI Tailoring Fails
+
 **Problem**: Error during resume tailoring
 **Solutions**:
+
 1. Check that `VITE_GOOGLE_GEMINI_API_KEY` is set correctly in `.env.local`
 2. Verify your Gemini API key is active and has quota
 3. Check console (DevTools) for detailed error messages
 
 ### Extension Button Not Appearing
+
 **Problem**: "📄 Match & Download Resume" button not visible
 **Solution**:
+
 1. Reload the extension: `chrome://extensions` → Find ResumeMatch Pro → Click refresh icon
 2. Reload the job site page (Ctrl+R or Cmd+R)
 3. Check that the content script is injected:
@@ -241,8 +256,10 @@ client/
    - Look for content script in the injected scripts
 
 ### Download Not Working
+
 **Problem**: Download doesn't start or file is corrupted
 **Solution**:
+
 1. Check Chrome's download settings
 2. Ensure you have write permissions to Downloads folder
 3. Try downloading to a different location
@@ -257,6 +274,7 @@ pnpm run build
 ```
 
 This creates:
+
 - `dist/spa/` - Web app bundle
 - Extension files ready for loading
 
@@ -305,7 +323,7 @@ This is optional and not required for the extension to function.
 chrome.tabs.query({}, (tabs) => console.log(tabs));
 
 // 2. Check if button is in DOM
-document.getElementById('resumematch-extract-btn')
+document.getElementById("resumematch-extract-btn");
 
 // 3. Check console for errors
 ```
