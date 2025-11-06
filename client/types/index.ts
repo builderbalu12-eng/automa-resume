@@ -57,6 +57,7 @@ export interface JobDescription {
 }
 
 export interface ApplicationRecord {
+  id?: string;
   _id?: string;
   userId: string;
   jobTitle: string;
