@@ -68,36 +68,139 @@ export const UploadResume: React.FC = () => {
               job applications.
             </p>
 
-            <div className="bg-card border border-border rounded-lg p-6 mb-8 text-left">
-              <h2 className="font-semibold mb-4">Resume Summary</h2>
-              <div className="space-y-3 text-sm">
-                <div>
-                  <p className="text-muted-foreground">Name</p>
-                  <p className="font-medium">{resume.contact.name}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Email</p>
-                  <p className="font-medium">{resume.contact.email}</p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Skills</p>
-                  <p className="font-medium">
-                    {resume.skills.length} skills identified
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Experience</p>
-                  <p className="font-medium">
-                    {resume.experience.length} positions
-                  </p>
-                </div>
-                <div>
-                  <p className="text-muted-foreground">Education</p>
-                  <p className="font-medium">
-                    {resume.education.length} degrees
-                  </p>
+            <div className="bg-card border border-border rounded-lg p-6 mb-8 text-left space-y-6 max-h-[600px] overflow-y-auto">
+              {/* Contact Info */}
+              <div>
+                <h3 className="font-semibold text-base mb-2">
+                  {resume.contact.name}
+                </h3>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  {resume.contact.email && <p>📧 {resume.contact.email}</p>}
+                  {resume.contact.phone && <p>📞 {resume.contact.phone}</p>}
+                  {resume.contact.location && <p>📍 {resume.contact.location}</p>}
                 </div>
               </div>
+
+              {/* Summary */}
+              {resume.summary && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-1">Professional Summary</h4>
+                  <p className="text-sm text-muted-foreground">{resume.summary}</p>
+                </div>
+              )}
+
+              {/* Skills */}
+              {resume.skills.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Skills ({resume.skills.length})</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {resume.skills.map((skill, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Experience */}
+              {resume.experience.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Experience ({resume.experience.length})</h4>
+                  <div className="space-y-2">
+                    {resume.experience.map((exp, i) => (
+                      <div key={i} className="text-sm border-l-2 border-primary pl-3">
+                        <p className="font-medium">{exp.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {exp.company} • {exp.startDate}
+                          {exp.endDate && ` - ${exp.endDate}`}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Education */}
+              {resume.education.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Education ({resume.education.length})</h4>
+                  <div className="space-y-2">
+                    {resume.education.map((edu, i) => (
+                      <div key={i} className="text-sm">
+                        <p className="font-medium">
+                          {edu.degree} in {edu.field}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {edu.institution}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Certifications */}
+              {resume.certifications && resume.certifications.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Certifications ({resume.certifications.length})</h4>
+                  <ul className="space-y-1">
+                    {resume.certifications.map((cert, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        ✓ {cert}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Achievements */}
+              {resume.achievements && resume.achievements.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Achievements ({resume.achievements.length})</h4>
+                  <ul className="space-y-1">
+                    {resume.achievements.map((achievement, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        🏆 {achievement}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Publications */}
+              {resume.publications && resume.publications.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Publications ({resume.publications.length})</h4>
+                  <ul className="space-y-1">
+                    {resume.publications.map((publication, i) => (
+                      <li key={i} className="text-sm text-muted-foreground">
+                        📄 {publication}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Hobbies */}
+              {resume.hobbies && resume.hobbies.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Hobbies & Interests</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {resume.hobbies.map((hobby, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-full"
+                      >
+                        {hobby}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
