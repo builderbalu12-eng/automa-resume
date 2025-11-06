@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { ResumeData, ApplicationRecord } from "@/types";
 import { getApplicationHistory } from "@/services/mongodb";
-import { getMasterResume, getUserId } from "@/utils/storage";
+import { getMasterResume } from "@/utils/storage";
 
 export const Dashboard: React.FC = () => {
   const [masterResume, setMasterResume] = useState<ResumeData | null>(null);
