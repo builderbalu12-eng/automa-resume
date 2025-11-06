@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Dashboard } from "./pages/Dashboard";
 import { UploadResume } from "./pages/UploadResume";
+import { TailorResume } from "./pages/TailorResume";
 import { History } from "./pages/History";
 import { NotFound } from "./pages/NotFound";
 
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/upload" element={<UploadResume />} />
+          <Route path="/tailor" element={<TailorResume />} />
           <Route path="/history" element={<History />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
