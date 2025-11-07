@@ -200,7 +200,7 @@ export function extractSkills(text: string): string[] {
 export function createJobExtractionButton(): HTMLElement {
   const button = document.createElement("button");
   button.id = "resumematch-extract-btn";
-  button.textContent = "📄 Match & Download Resume";
+  button.textContent = "Analyse";
   button.style.cssText = `
     position: fixed;
     bottom: 30px;
