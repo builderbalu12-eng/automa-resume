@@ -6,6 +6,14 @@ import { saveToStorage } from "@/utils/storage";
 
 let injectedButton = false;
 
+function getPageHTML(): string {
+  return document.documentElement.outerHTML;
+}
+
+function getPageText(): string {
+  return document.body.innerText;
+}
+
 function injectButton() {
   if (injectedButton) return;
 
@@ -14,24 +22,30 @@ function injectButton() {
   injectedButton = true;
 
   button.addEventListener("click", async () => {
-    const jobData = extractJobDescriptionFromDOM();
-    if (!jobData) {
-      alert(
-        "Could not extract job description. Please make sure you're on a job posting page.",
-      );
-      return;
-    }
+    // Capture the full HTML page
+    const pageHTML = getPageHTML();
+    const pageText = getPageText();
+    const pageURL = window.location.href;
 
-    // Save job data to extension storage for the popup to access
+    // Also try to extract basic info from DOM as fallback
+    const basicJobData = extractJobDescriptionFromDOM();
+
+    // Save page content to storage for the popup to access
     try {
-      await saveToStorage("currentJobData", jobData);
+      await saveToStorage("currentPageHTML", pageHTML);
+      await saveToStorage("currentPageText", pageText);
+      await saveToStorage("currentPageURL", pageURL);
+      if (basicJobData) {
+        await saveToStorage("currentJobData", basicJobData);
+      }
+
       // Open the popup
       chrome.runtime.sendMessage({ action: "openPopup" }).catch(() => {
         // Popup may already be open
       });
     } catch (error) {
-      console.error("Error saving job data:", error);
-      alert("Failed to extract job data. Please try again.");
+      console.error("Error saving page data:", error);
+      alert("Failed to analyze page. Please try again.");
     }
   });
 }
@@ -61,6 +75,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "getJobData") {
     const jobData = extractJobDescriptionFromDOM();
     sendResponse({ jobData: jobData || null });
+  } else if (request.action === "getPageHTML") {
+    const pageHTML = getPageHTML();
+    sendResponse({ html: pageHTML });
+  } else if (request.action === "getPageText") {
+    const pageText = getPageText();
+    sendResponse({ text: pageText });
   } else if (request.action === "injectButton") {
     injectButton();
     sendResponse({ success: true });
