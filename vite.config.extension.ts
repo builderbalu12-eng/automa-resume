@@ -55,21 +55,18 @@ export default defineConfig({
   build: {
     outDir: "dist/extension",
     emptyOutDir: false,
-    lib: {
-      entry: {
+    rollupOptions: {
+      input: {
         background: path.resolve(__dirname, "client/extension/background.ts"),
         content: path.resolve(__dirname, "client/extension/content.ts"),
         popup: path.resolve(__dirname, "client/extension/popup.ts"),
       },
-      formats: ["iife"],
-    },
-    rollupOptions: {
       output: {
+        dir: "dist/extension",
         entryFileNames: "[name].js",
         format: "iife",
-        inlineDynamicImports: false,
+        inlineDynamicImports: true,
       },
-      external: [],
     },
     minify: "terser",
   },
