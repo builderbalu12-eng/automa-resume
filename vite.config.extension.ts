@@ -7,62 +7,60 @@ export default defineConfig({
   plugins: [
     react(),
     {
-      name: "copy-extension-assets",
+      name: "copy-extension-files",
       apply: "build",
       enforce: "post",
       writeBundle() {
-        const distDir = path.resolve(__dirname, "dist/extension");
+        const distDir = "dist/extension";
+        
         if (!fs.existsSync(distDir)) {
           fs.mkdirSync(distDir, { recursive: true });
         }
 
-        // Copy manifest.json
-        const manifestSrc = path.resolve(__dirname, "public/manifest.json");
-        const manifestDest = path.resolve(distDir, "manifest.json");
-        if (fs.existsSync(manifestSrc)) {
-          fs.copyFileSync(manifestSrc, manifestDest);
-          console.log("✓ Copied manifest.json");
+        // Copy manifest
+        if (fs.existsSync("public/manifest.json")) {
+          fs.copyFileSync("public/manifest.json", `${distDir}/manifest.json`);
+          console.log("✓ manifest.json");
         }
 
-        // Copy popup.html
-        const popupSrc = path.resolve(__dirname, "client/extension/popup.html");
-        const popupDest = path.resolve(distDir, "popup.html");
-        if (fs.existsSync(popupSrc)) {
-          fs.copyFileSync(popupSrc, popupDest);
-          console.log("✓ Copied popup.html");
+        // Copy popup HTML
+        if (fs.existsSync("client/extension/popup.html")) {
+          fs.copyFileSync("client/extension/popup.html", `${distDir}/popup.html`);
+          console.log("✓ popup.html");
         }
 
-        // Copy favicon.ico
-        const faviconSrc = path.resolve(__dirname, "public/favicon.ico");
-        const faviconDest = path.resolve(distDir, "favicon.ico");
-        if (fs.existsSync(faviconSrc)) {
-          fs.copyFileSync(faviconSrc, faviconDest);
-          console.log("✓ Copied favicon.ico");
+        // Copy favicon
+        if (fs.existsSync("public/favicon.ico")) {
+          fs.copyFileSync("public/favicon.ico", `${distDir}/favicon.ico`);
+          console.log("✓ favicon.ico");
         }
       },
     },
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
+      "@": path.resolve(__dirname, "client"),
+      "@shared": path.resolve(__dirname, "shared"),
     },
   },
   build: {
+    target: "esnext",
     outDir: "dist/extension",
     emptyOutDir: false,
+    lib: {
+      entry: {
+        background: "client/extension/background.ts",
+        content: "client/extension/content.ts",
+        popup: "client/extension/popup.ts",
+      },
+      formats: ["es"],
+      fileName: (format, entryName) => `${entryName}.js`,
+    },
     rollupOptions: {
-      input: {
-        background: path.resolve(__dirname, "client/extension/background.ts"),
-        content: path.resolve(__dirname, "client/extension/content.ts"),
-        popup: path.resolve(__dirname, "client/extension/popup.ts"),
-      },
       output: {
-        dir: "dist/extension",
+        preserveModules: false,
         entryFileNames: "[name].js",
-        format: "es",
       },
-      manualChunks: undefined,
     },
     minify: "terser",
   },
