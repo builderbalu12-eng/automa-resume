@@ -77,7 +77,7 @@ export function extractRequirements(text: string): string[] {
   const requirements: string[] = [];
 
   const requirementsSection = text.match(
-    /(?:requirement|skill|qualification|must have|should have)[\s\S]*?(?:nice to have|about|$/i,
+    /(?:requirement|skill|qualification|must have|should have)[\s\S]*?(?:nice to have|about|$)/i,
   );
 
   if (requirementsSection) {
